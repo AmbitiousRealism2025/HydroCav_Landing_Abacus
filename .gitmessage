@@ -1,0 +1,33 @@
+# <type>: <subject>
+#
+# <body>
+#
+# <footer>
+
+# Type should be one of the following:
+# * feat (new feature)
+# * fix (bug fix)
+# * docs (documentation)
+# * style (formatting, missing semi colons, etc; no code change)
+# * refactor (refactoring production code)
+# * test (adding tests, refactoring test; no production code change)
+# * chore (updating build tasks, package manager configs, etc; no production code change)
+# * perf (performance improvements)
+# * ci (continuous integration related)
+# * build (build system or external dependencies)
+# * revert (reverting a previous commit)
+#
+# Subject should use imperative mood and not end with period
+# Examples:
+# - feat: add interactive product viewer
+# - fix: resolve mobile navigation issue
+# - docs: update installation instructions
+#
+# Body should explain what and why vs. how
+# Can be multiple paragraphs, each separated by blank line
+#
+# Footer should contain any BREAKING CHANGES or issue references
+# Examples:
+# - Closes #123
+# - Fixes #456
+# - BREAKING CHANGE: remove deprecated API

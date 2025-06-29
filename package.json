@@ -1,0 +1,83 @@
+{
+  "name": "hydrocav-landing-page",
+  "version": "1.0.0",
+  "description": "Modern, responsive landing page for HydroCav's HydroLoop water treatment system",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8000 -c-1",
+    "dev": "http-server -p 8000 -c-1 -o",
+    "build": "npm run minify:css && npm run minify:js",
+    "minify:css": "cleancss -o dist/styles.min.css styles.css",
+    "minify:js": "terser script.js -o dist/script.min.js -c -m",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js",
+    "lint:html": "html-validate index.html",
+    "lint:css": "stylelint styles.css",
+    "lint:js": "eslint script.js",
+    "lint:fix": "stylelint styles.css --fix && eslint script.js --fix",
+    "test": "node test.js && npm run lint && npm run validate",
+    "test:quick": "node test.js",
+    "test:accessibility": "pa11y http://localhost:8000",
+    "test:accessibility:file": "pa11y file://$(pwd)/index.html",
+    "test:performance": "lighthouse http://localhost:8000 --output=html --output-path=./reports/lighthouse.html",
+    "optimize:images": "imagemin assets/images/* --out-dir=dist/images",
+    "validate": "html-validate index.html && w3c-html-validator index.html",
+    "serve:dist": "http-server dist -p 8001",
+    "deploy:staging": "echo 'Deploy to staging environment'",
+    "deploy:production": "echo 'Deploy to production environment'",
+    "clean": "rm -rf dist reports",
+    "setup": "npm install && chmod +x git-setup.sh && ./git-setup.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hydrocav/landing-page.git"
+  },
+  "keywords": [
+    "hydrocav",
+    "hydroloop",
+    "water-treatment",
+    "landing-page",
+    "responsive",
+    "modern-web",
+    "html5",
+    "css3",
+    "javascript",
+    "accessibility",
+    "performance"
+  ],
+  "author": "HydroCav Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/hydrocav/landing-page/issues"
+  },
+  "homepage": "https://github.com/hydrocav/landing-page#readme",
+  "devDependencies": {
+    "@lhci/cli": "^0.12.0",
+    "clean-css-cli": "^5.6.2",
+    "eslint": "^8.50.0",
+    "html-validate": "^8.5.0",
+    "http-server": "^14.1.1",
+    "imagemin": "^8.0.1",
+    "imagemin-cli": "^7.0.0",
+    "lighthouse": "^11.0.0",
+    "pa11y": "^7.0.0",
+    "stylelint": "^15.10.3",
+    "stylelint-config-standard": "^34.0.0",
+    "terser": "^5.20.0",
+    "w3c-html-validator": "^1.6.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "config": {
+    "port": 8000,
+    "host": "localhost"
+  }
+}
