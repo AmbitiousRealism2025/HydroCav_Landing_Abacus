@@ -4,9 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
-    hamburger.addEventListener('click', function() {
+    function toggleMobileMenu() {
+        const isOpen = navMenu.classList.contains('active');
         navMenu.classList.toggle('active');
         hamburger.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', (!isOpen).toString());
+    }
+
+    hamburger.addEventListener('click', toggleMobileMenu);
+    
+    // Add keyboard support for hamburger menu
+    hamburger.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleMobileMenu();
+        }
     });
     
     // Smooth Scrolling for Navigation Links
@@ -25,9 +37,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Scroll Progress Bar
+    const scrollProgressFill = document.querySelector('.scroll-progress-fill');
+    
+    function updateScrollProgress() {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY;
+        const progress = (scrolled / scrollable) * 100;
+        
+        if (scrollProgressFill) {
+            scrollProgressFill.style.width = `${Math.min(progress, 100)}%`;
+        }
+    }
+
     // Navbar Background on Scroll
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', function() {
+        updateScrollProgress();
+        
         if (window.scrollY > 50) {
             navbar.style.background = 'rgba(255, 255, 255, 0.98)';
             navbar.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
@@ -114,47 +141,214 @@ document.addEventListener('DOMContentLoaded', function() {
         counterObserver.observe(counter);
     });
     
-    // Product View Controls
+    // Enhanced Product View Controls with Swipe Support
     const viewButtons = document.querySelectorAll('.view-btn');
     const productImages = document.querySelectorAll('.product-image');
+    const productViewer = document.querySelector('.product-3d-view');
     
-    viewButtons.forEach(button => {
+    let currentViewIndex = 0;
+    const views = ['front', 'side', 'top'];
+    
+    function switchToView(viewIndex) {
+        const targetView = views[viewIndex];
+        
+        // Update buttons
+        viewButtons.forEach(btn => btn.classList.remove('active'));
+        const targetButton = document.querySelector(`[data-view="${targetView}"]`);
+        if (targetButton) targetButton.classList.add('active');
+        
+        // Update images with transition effect
+        productImages.forEach(img => {
+            img.classList.remove('active');
+            if (img.dataset.view === targetView) {
+                img.classList.add('active');
+            }
+        });
+        
+        currentViewIndex = viewIndex;
+    }
+    
+    // Button click handlers
+    viewButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
             const targetView = this.dataset.view;
-            
-            // Update buttons
-            viewButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update images
-            productImages.forEach(img => {
-                img.classList.remove('active');
-                if (img.dataset.view === targetView) {
-                    img.classList.add('active');
-                }
-            });
+            const viewIndex = views.indexOf(targetView);
+            if (viewIndex !== -1) {
+                switchToView(viewIndex);
+            }
         });
     });
     
-    // Size Selector Tabs
+    // Touch/Swipe Support for Product Viewer
+    if (productViewer) {
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        
+        productViewer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        });
+        
+        productViewer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault(); // Prevent scrolling
+        });
+        
+        productViewer.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            
+            // Check if this is a horizontal swipe (not vertical scroll)
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    // Swipe right - previous view
+                    const newIndex = (currentViewIndex - 1 + views.length) % views.length;
+                    switchToView(newIndex);
+                } else {
+                    // Swipe left - next view
+                    const newIndex = (currentViewIndex + 1) % views.length;
+                    switchToView(newIndex);
+                }
+            }
+        });
+        
+        // Mouse drag support for desktop
+        let isMouseDragging = false;
+        let mouseStartX = 0;
+        
+        productViewer.addEventListener('mousedown', (e) => {
+            mouseStartX = e.clientX;
+            isMouseDragging = true;
+            productViewer.style.cursor = 'grabbing';
+        });
+        
+        productViewer.addEventListener('mousemove', (e) => {
+            if (!isMouseDragging) return;
+            e.preventDefault();
+        });
+        
+        productViewer.addEventListener('mouseup', (e) => {
+            if (!isMouseDragging) return;
+            isMouseDragging = false;
+            productViewer.style.cursor = 'grab';
+            
+            const deltaX = e.clientX - mouseStartX;
+            
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    // Drag right - previous view
+                    const newIndex = (currentViewIndex - 1 + views.length) % views.length;
+                    switchToView(newIndex);
+                } else {
+                    // Drag left - next view
+                    const newIndex = (currentViewIndex + 1) % views.length;
+                    switchToView(newIndex);
+                }
+            }
+        });
+        
+        productViewer.addEventListener('mouseleave', () => {
+            isMouseDragging = false;
+            productViewer.style.cursor = 'grab';
+        });
+        
+        // Set initial cursor
+        productViewer.style.cursor = 'grab';
+        
+        // Keyboard navigation
+        productViewer.setAttribute('tabindex', '0');
+        productViewer.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    const prevIndex = (currentViewIndex - 1 + views.length) % views.length;
+                    switchToView(prevIndex);
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    const nextIndex = (currentViewIndex + 1) % views.length;
+                    switchToView(nextIndex);
+                    e.preventDefault();
+                    break;
+            }
+        });
+    }
+    
+    // Enhanced Size Selector with Smooth Transitions
     const sizeTabs = document.querySelectorAll('.size-tab');
     const sizePanes = document.querySelectorAll('.size-pane');
+    const sizeSelector = document.querySelector('.size-selector');
+    
+    function switchToSize(targetSize) {
+        // Add transition indicator
+        if (sizeSelector) {
+            sizeSelector.classList.add('transitioning');
+        }
+        
+        // Update tabs with staggered animation
+        sizeTabs.forEach((tab, index) => {
+            tab.classList.remove('active');
+            if (tab.dataset.size === targetSize) {
+                setTimeout(() => {
+                    tab.classList.add('active');
+                }, index * 50);
+            }
+        });
+        
+        // Smooth pane transition
+        const currentPane = document.querySelector('.size-pane.active');
+        const targetPane = document.querySelector(`[data-size="${targetSize}"]`);
+        
+        if (currentPane && targetPane && currentPane !== targetPane) {
+            // Fade out current pane
+            currentPane.style.opacity = '0';
+            currentPane.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                currentPane.classList.remove('active');
+                targetPane.classList.add('active');
+                
+                // Fade in target pane
+                requestAnimationFrame(() => {
+                    targetPane.style.opacity = '1';
+                    targetPane.style.transform = 'translateY(0)';
+                });
+                
+                // Remove transition indicator
+                setTimeout(() => {
+                    if (sizeSelector) {
+                        sizeSelector.classList.remove('transitioning');
+                    }
+                }, 300);
+            }, 300);
+        }
+    }
     
     sizeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             const targetSize = this.dataset.size;
-            
-            // Update tabs
-            sizeTabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update panes
-            sizePanes.forEach(pane => {
-                pane.classList.remove('active');
-                if (pane.dataset.size === targetSize) {
-                    pane.classList.add('active');
-                }
-            });
+            switchToSize(targetSize);
+        });
+        
+        // Add hover effect for better UX
+        tab.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+                this.style.boxShadow = 'var(--shadow-lg)';
+            }
+        });
+        
+        tab.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }
         });
     });
     
@@ -173,7 +367,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Intersection Observer for Animations
+    // Enhanced Scroll Reveal Animation System
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    
+    const revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add staggered delay for sibling elements
+                const siblingElements = [...entry.target.parentNode.children].filter(el => 
+                    el.classList.contains('scroll-reveal'));
+                const elementIndex = siblingElements.indexOf(entry.target);
+                
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, elementIndex * 100); // 100ms stagger delay
+                
+                // Optional: unobserve after revealing
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    scrollRevealElements.forEach(element => {
+        revealObserver.observe(element);
+    });
+
+    // Intersection Observer for Animations (Legacy support)
     const animatedElements = document.querySelectorAll('[data-aos]');
     
     const animationObserver = new IntersectionObserver(function(entries) {
@@ -241,6 +463,130 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Before/After Comparison Slider
+    const comparisonContainer = document.querySelector('.comparison-container');
+    const afterImage = document.querySelector('.after-image');
+    const sliderHandle = document.querySelector('.slider-handle');
+    const sliderLine = document.querySelector('.slider-line');
+    
+    if (comparisonContainer && afterImage && sliderHandle && sliderLine) {
+        let isSliding = false;
+        
+        function updateSlider(percentage) {
+            // Clamp percentage between 0 and 100
+            percentage = Math.max(0, Math.min(100, percentage));
+            
+            // Update clip-path for after image
+            afterImage.style.clipPath = `polygon(${percentage}% 0%, 100% 0%, 100% 100%, ${percentage}% 100%)`;
+            
+            // Update handle and line position
+            sliderHandle.style.left = `${percentage}%`;
+            sliderLine.style.left = `${percentage}%`;
+        }
+        
+        function getPercentageFromEvent(e) {
+            const rect = comparisonContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            return (x / rect.width) * 100;
+        }
+        
+        // Mouse events
+        sliderHandle.addEventListener('mousedown', (e) => {
+            isSliding = true;
+            e.preventDefault();
+        });
+        
+        comparisonContainer.addEventListener('mousemove', (e) => {
+            if (isSliding) {
+                const percentage = getPercentageFromEvent(e);
+                updateSlider(percentage);
+            }
+        });
+        
+        comparisonContainer.addEventListener('click', (e) => {
+            if (!isSliding) {
+                const percentage = getPercentageFromEvent(e);
+                updateSlider(percentage);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isSliding = false;
+        });
+        
+        // Touch events for mobile
+        sliderHandle.addEventListener('touchstart', (e) => {
+            isSliding = true;
+            e.preventDefault();
+        });
+        
+        comparisonContainer.addEventListener('touchmove', (e) => {
+            if (isSliding) {
+                const touch = e.touches[0];
+                const rect = comparisonContainer.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                updateSlider(percentage);
+                e.preventDefault();
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            isSliding = false;
+        });
+        
+        // Keyboard accessibility
+        sliderHandle.setAttribute('tabindex', '0');
+        sliderHandle.setAttribute('role', 'slider');
+        sliderHandle.setAttribute('aria-valuemin', '0');
+        sliderHandle.setAttribute('aria-valuemax', '100');
+        sliderHandle.setAttribute('aria-valuenow', '50');
+        sliderHandle.setAttribute('aria-label', 'Comparison slider');
+        
+        sliderHandle.addEventListener('keydown', (e) => {
+            let currentPercentage = parseFloat(sliderHandle.style.left) || 50;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    currentPercentage -= 5;
+                    updateSlider(currentPercentage);
+                    sliderHandle.setAttribute('aria-valuenow', Math.round(currentPercentage));
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    currentPercentage += 5;
+                    updateSlider(currentPercentage);
+                    sliderHandle.setAttribute('aria-valuenow', Math.round(currentPercentage));
+                    e.preventDefault();
+                    break;
+            }
+        });
+    }
+    
+    // Interactive Technology Hotspots
+    const hotspots = document.querySelectorAll('.hotspot');
+    const tooltip = document.getElementById('tech-tooltip');
+    const tooltipContent = tooltip.querySelector('.tooltip-content');
+    
+    hotspots.forEach(hotspot => {
+        hotspot.addEventListener('mouseenter', function(e) {
+            const tooltipText = this.dataset.tooltip;
+            tooltipContent.textContent = tooltipText;
+            
+            // Position tooltip
+            const rect = this.getBoundingClientRect();
+            const svgRect = this.closest('.cavitation-svg').getBoundingClientRect();
+            
+            tooltip.style.left = `${rect.left - svgRect.left + rect.width / 2}px`;
+            tooltip.style.top = `${rect.top - svgRect.top - 10}px`;
+            tooltip.classList.add('show');
+        });
+        
+        hotspot.addEventListener('mouseleave', function() {
+            tooltip.classList.remove('show');
+        });
+    });
+
     // Bubble Animation Enhancement
     const bubbles = document.querySelectorAll('.bubble');
     
@@ -351,6 +697,158 @@ document.addEventListener('DOMContentLoaded', function() {
                         e.preventDefault();
                     }
                 }
+            }
+        });
+    }
+    
+    // Advanced Particle System
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas?.getContext('2d');
+    let particles = [];
+    let mouseX = 0;
+    let mouseY = 0;
+    let animationId;
+    
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (canvas && ctx && !prefersReducedMotion) {
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 3 + 1,
+                opacity: Math.random() * 0.6 + 0.2,
+                color: `hsla(${190 + Math.random() * 30}, 70%, 60%, ${Math.random() * 0.4 + 0.2})`,
+                life: Math.random() * 100 + 50,
+                maxLife: 150,
+                connections: 0
+            };
+        }
+        
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(createParticle());
+            }
+        }
+        
+        function updateParticle(particle) {
+            // Mouse interaction
+            const dx = mouseX - particle.x;
+            const dy = mouseY - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 100) {
+                const force = (100 - distance) / 100;
+                particle.vx += (dx / distance) * force * 0.01;
+                particle.vy += (dy / distance) * force * 0.01;
+            }
+            
+            // Physics
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Damping
+            particle.vx *= 0.99;
+            particle.vy *= 0.99;
+            
+            // Boundaries with wrapping
+            if (particle.x < 0) particle.x = canvas.width;
+            if (particle.x > canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = canvas.height;
+            if (particle.y > canvas.height) particle.y = 0;
+            
+            // Life cycle
+            particle.life--;
+            if (particle.life <= 0) {
+                Object.assign(particle, createParticle());
+            }
+            
+            // Opacity based on life
+            const lifeRatio = particle.life / particle.maxLife;
+            particle.opacity = Math.max(0.1, lifeRatio * 0.6);
+        }
+        
+        function drawParticle(particle) {
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fillStyle = particle.color;
+            ctx.globalAlpha = particle.opacity;
+            ctx.fill();
+            
+            // Add subtle glow effect
+            ctx.shadowColor = particle.color;
+            ctx.shadowBlur = particle.size * 2;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+        
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        const opacity = (120 - distance) / 120 * 0.2;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(0, 180, 216, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            particles.forEach(particle => {
+                updateParticle(particle);
+                drawParticle(particle);
+            });
+            
+            // Draw connections between nearby particles
+            drawConnections();
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        // Mouse tracking for particle interaction
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+        
+        // Initialize and start
+        resizeCanvas();
+        initParticles();
+        animate();
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
             }
         });
     }
