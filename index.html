@@ -47,7 +47,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Main navigation">
         <div class="container">
             <div class="nav-brand">
                 <picture>
@@ -63,11 +63,11 @@
                 <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="#contact" class="nav-link cta-button">Get Quote</a></li>
             </ul>
-            <div class="hamburger" role="button" tabindex="0" aria-label="Toggle navigation menu" aria-expanded="false">
+            <button class="hamburger" type="button" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </nav>
 
@@ -159,7 +159,7 @@
             <div class="tech-showcase">
                 <div class="tech-diagram">
                     <div class="cavitation-animation">
-                        <svg viewBox="0 0 400 300" class="cavitation-svg">
+                        <svg viewBox="0 0 400 300" class="cavitation-svg" focusable="false" aria-hidden="true">
                             <!-- Flow lines -->
                             <defs>
                                 <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -261,9 +261,9 @@
                 
                 <div class="tech-info">
                     <div class="tech-tabs" role="tablist" aria-label="Technology information">
-                        <button class="tab-button active" data-tab="how-it-works" role="tab" aria-selected="true" aria-controls="how-it-works" id="tab-how-it-works">How It Works</button>
-                        <button class="tab-button" data-tab="benefits" role="tab" aria-selected="false" aria-controls="benefits" id="tab-benefits">Key Benefits</button>
-                        <button class="tab-button" data-tab="applications" role="tab" aria-selected="false" aria-controls="applications" id="tab-applications">Applications</button>
+                        <button class="tab-button active" type="button" data-tab="how-it-works" role="tab" aria-selected="true" aria-controls="how-it-works" id="tab-how-it-works">How It Works</button>
+                        <button class="tab-button" type="button" data-tab="benefits" role="tab" aria-selected="false" aria-controls="benefits" id="tab-benefits">Key Benefits</button>
+                        <button class="tab-button" type="button" data-tab="applications" role="tab" aria-selected="false" aria-controls="applications" id="tab-applications">Applications</button>
                     </div>
                     
                     <div class="tab-content">
@@ -277,7 +277,7 @@
                             </ol>
                         </div>
                         
-                        <div id="benefits" class="tab-pane" role="tabpanel" aria-labelledby="tab-benefits">
+                        <div id="benefits-tab" class="tab-pane" role="tabpanel" aria-labelledby="tab-benefits">
                             <h3>Technology Advantages</h3>
                             <ul class="benefit-list">
                                 <li><i class="fas fa-check-circle"></i> Chemical-free purification</li>
@@ -290,7 +290,7 @@
                         <div id="applications" class="tab-pane" role="tabpanel" aria-labelledby="tab-applications">
                             <h3>Versatile Applications</h3>
                             <div class="application-grid">
-                                <div class="app-item">Hotels & Resorts</div>
+                                <div class="app-item">Hotels &amp; Resorts</div>
                                 <div class="app-item">Fitness Centers</div>
                                 <div class="app-item">Municipal Pools</div>
                                 <div class="app-item">Residential Systems</div>
@@ -302,7 +302,7 @@
             
             <!-- Before/After Water Quality Comparison -->
             <div class="water-quality-demo scroll-reveal scroll-reveal-fade-up">
-                <h3>See the Difference: Before & After HydroLoop Treatment</h3>
+                <h3>See the Difference: Before &amp; After HydroLoop Treatment</h3>
                 <p>Slide to compare water quality improvements</p>
                 
                 <div class="comparison-slider">
@@ -361,7 +361,7 @@
     <!-- Solution & Benefits Grid -->
     <section id="benefits" class="benefits-section">
         <div class="container">
-            <h2 class="section-title">HydroLoop Solution & Key Benefits</h2>
+            <h2 class="section-title">HydroLoop Solution &amp; Key Benefits</h2>
             <p class="section-subtitle">Transform your pool environment with proven results</p>
             
             <div class="benefits-grid">
@@ -371,7 +371,7 @@
                         <div class="card-icon-wrapper">
                             <i class="fas fa-tint"></i>
                         </div>
-                        <h3>Water & Air Quality</h3>
+                        <h3>Water &amp; Air Quality</h3>
                     </div>
                     <div class="card-content">
                         <p>Dramatically improves pool environment</p>
@@ -390,7 +390,7 @@
                             <li>Eliminates Legionella, Cryptosporidium, and Pseudomonas</li>
                         </ul>
                     </div>
-                    <button class="expand-btn">Learn More <i class="fas fa-chevron-down"></i></button>
+                    <button class="expand-btn" type="button">Learn More <i class="fas fa-chevron-down"></i></button>
                 </div>
 
                 <!-- Cost Reduction Card -->
@@ -419,7 +419,7 @@
                             <li>Lower long-term operational costs</li>
                         </ul>
                     </div>
-                    <button class="expand-btn">Learn More <i class="fas fa-chevron-down"></i></button>
+                    <button class="expand-btn" type="button">Learn More <i class="fas fa-chevron-down"></i></button>
                 </div>
 
                 <!-- Fail-Safe Protection Card -->
@@ -448,7 +448,7 @@
                             <li>Reduces liability and preserves reputation</li>
                         </ul>
                     </div>
-                    <button class="expand-btn">Learn More <i class="fas fa-chevron-down"></i></button>
+                    <button class="expand-btn" type="button">Learn More <i class="fas fa-chevron-down"></i></button>
                 </div>
 
                 <!-- User Experience Card -->
@@ -482,7 +482,7 @@
                             <li>Significantly improved guest satisfaction</li>
                         </ul>
                     </div>
-                    <button class="expand-btn">Learn More <i class="fas fa-chevron-down"></i></button>
+                    <button class="expand-btn" type="button">Learn More <i class="fas fa-chevron-down"></i></button>
                 </div>
             </div>
         </div>
@@ -491,7 +491,7 @@
     <!-- Product Features Showcase -->
     <section id="features" class="features-section">
         <div class="container">
-            <h2 class="section-title">Unique Features & Design</h2>
+            <h2 class="section-title">Unique Features &amp; Design</h2>
             <p class="section-subtitle">Built for durability, ease of use, and adaptability</p>
             
             <div class="features-showcase">
@@ -511,9 +511,9 @@
                         </picture>
                     </div>
                     <div class="view-controls">
-                        <button class="view-btn active" data-view="front">Front</button>
-                        <button class="view-btn" data-view="side">Side</button>
-                        <button class="view-btn" data-view="top">Top</button>
+                        <button class="view-btn active" type="button" data-view="front">Front</button>
+                        <button class="view-btn" type="button" data-view="side">Side</button>
+                        <button class="view-btn" type="button" data-view="top">Top</button>
                     </div>
                 </div>
                 
@@ -533,7 +533,7 @@
                             <i class="fas fa-eye"></i>
                         </div>
                         <div class="feature-content">
-                            <h4>Clear View Technology</h4>
+                            <h3>Clear View Technology</h3>
                             <p>Transparent PVC elbow provides instant visual feedback for maintenance</p>
                         </div>
                     </div>
@@ -565,20 +565,20 @@
     <!-- Size Options & Configurations -->
     <section id="configurations" class="config-section">
         <div class="container">
-            <h2 class="section-title">Size Options & Configurations</h2>
+            <h2 class="section-title">Size Options &amp; Configurations</h2>
             <p class="section-subtitle">Perfect fit for every application</p>
             
             <div class="size-selector">
                 <div class="size-tabs">
-                    <button class="size-tab active" data-size="small">
+                    <button class="size-tab active" type="button" data-size="small">
                         <span class="size-label">1.5"</span>
                         <span class="size-desc">Residential</span>
                     </button>
-                    <button class="size-tab" data-size="medium">
+                    <button class="size-tab" type="button" data-size="medium">
                         <span class="size-label">2"</span>
                         <span class="size-desc">Commercial</span>
                     </button>
-                    <button class="size-tab" data-size="large">
+                    <button class="size-tab" type="button" data-size="large">
                         <span class="size-label">2.5"</span>
                         <span class="size-desc">Industrial</span>
                     </button>
@@ -595,7 +595,7 @@
                                 <li><i class="fas fa-check"></i> Compact design</li>
                                 <li><i class="fas fa-check"></i> Easy installation</li>
                             </ul>
-                            <button class="btn btn-primary">Download Specs</button>
+                            <button class="btn btn-primary" type="button">Download Specs</button>
                         </div>
                         <div class="size-visual">
                             <picture>
@@ -615,7 +615,7 @@
                                 <li><i class="fas fa-check"></i> Versatile mounting options</li>
                                 <li><i class="fas fa-check"></i> Commercial-grade materials</li>
                             </ul>
-                            <button class="btn btn-primary">Download Specs</button>
+                            <button class="btn btn-primary" type="button">Download Specs</button>
                         </div>
                         <div class="size-visual">
                             <picture>
@@ -635,7 +635,7 @@
                                 <li><i class="fas fa-check"></i> Handles up to 3" pipes</li>
                                 <li><i class="fas fa-check"></i> Heavy-duty construction</li>
                             </ul>
-                            <button class="btn btn-primary">Download Specs</button>
+                            <button class="btn btn-primary" type="button">Download Specs</button>
                         </div>
                         <div class="size-visual">
                             <picture>
@@ -652,7 +652,7 @@
     <!-- Installation & Maintenance -->
     <section id="installation" class="install-section">
         <div class="container">
-            <h2 class="section-title">Simple Installation & Maintenance</h2>
+            <h2 class="section-title">Simple Installation &amp; Maintenance</h2>
             <p class="section-subtitle">Designed for easy setup and minimal downtime</p>
             
             <div class="install-content">
@@ -683,7 +683,7 @@
                         <div class="step" data-step="4">
                             <div class="step-number">4</div>
                             <div class="step-content">
-                                <h4>Test & Verify</h4>
+                                <h4>Test &amp; Verify</h4>
                                 <p>Check flow rates and system operation</p>
                             </div>
                         </div>
@@ -719,7 +719,7 @@
             
             <div class="install-cta">
                 <p>Need installation support?</p>
-                <button class="btn btn-secondary">View Installation Guide</button>
+                <button class="btn btn-secondary" type="button">View Installation Guide</button>
             </div>
         </div>
     </section>
@@ -737,21 +737,21 @@
                         <i class="fas fa-phone-alt"></i>
                         <h3>Speak with an Expert</h3>
                         <p>Get personalized recommendations for your facility</p>
-                        <button class="btn btn-white">Schedule Call</button>
+                        <button class="btn btn-white" type="button">Schedule Call</button>
                     </div>
                     
                     <div class="cta-card featured">
                         <i class="fas fa-calculator"></i>
                         <h3>Get a Custom Quote</h3>
                         <p>Receive pricing tailored to your specific needs</p>
-                        <button class="btn btn-primary">Request Quote</button>
+                        <button class="btn btn-primary" type="button">Request Quote</button>
                     </div>
                     
                     <div class="cta-card">
                         <i class="fas fa-download"></i>
                         <h3>Download Brochure</h3>
                         <p>Detailed specifications and case studies</p>
-                        <button class="btn btn-white">Download PDF</button>
+                        <button class="btn btn-white" type="button">Download PDF</button>
                     </div>
                 </div>
                 
@@ -776,7 +776,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-wave">
-            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+            <svg viewBox="0 0 1440 100" preserveAspectRatio="none" focusable="false" aria-hidden="true">
                 <path d="M0,50 C360,100 1080,0 1440,50 L1440,100 L0,100 Z" fill="#003366"></path>
             </svg>
         </div>
@@ -828,7 +828,7 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 HydroCav. All rights reserved.</p>
+                <p>&amp;copy; 2024 HydroCav. All rights reserved.</p>
                 <div class="footer-links">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
